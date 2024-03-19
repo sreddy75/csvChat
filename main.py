@@ -1,5 +1,4 @@
 from tempfile import NamedTemporaryFile
-
 from langchain_experimental.agents import create_csv_agent
 from langchain.llms import OpenAI
 from dotenv import load_dotenv
@@ -21,15 +20,12 @@ def main():
     st.header("Ask your CSV 📈")
 
     csv_file = st.file_uploader("Upload a CSV file", type="csv")
-
     if csv_file is not None:
         with NamedTemporaryFile() as f: # Create temporary file
             f.write(csv_file.getvalue())   
             f.flush() 
-            print("csv file path: ", csv_file.name)
             agent = create_csv_agent(
-                OpenAI(model="gpt-3.5-turbo-instruct",temperature=0), f.name, verbose=True
-            )
+                OpenAI(temperature=0), csv_file, verbose=True)
 
             user_question = st.text_input("Ask a question about your CSV: ")
 
